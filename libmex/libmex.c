@@ -132,17 +132,31 @@ again:
   }
   if (isspace(ch)) {
     if (!is_start) {
-      do {
+      while (1) {
         if (ch == '\n') line_breaks++;
         ch = fgetc(in);
         if (ch == EOF) {
           buf[blast++] = tEOF;
           return;
         }
-      } while (isspace(ch));
-      ungetc(ch, in);
+        if (!isspace(ch)) {
+          ungetc(ch, in);
+          break;
+        }
+      }
       buf[blast++] = line_breaks > 1 ? '\n' : ' ';
       line_breaks = 0;
+    }
+    goto again;
+  }
+  if (ch == '#') {
+    while (1) {
+      ch = fgetc(in);
+      if (ch == EOF) {
+        buf[blast++] = tEOF;
+        return;
+      }
+      if (ch == '\n') break;
     }
     goto again;
   }
@@ -275,7 +289,7 @@ int mxrun(FILE *fi, FILE *fo) {
   while (1) {
     token_t t = next();
     if (t == tEOF) break;
-    fputc(t, fo);
+    if (t < tEOF) fputc(t, fo);
   }
   return 0;
 }

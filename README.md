@@ -15,8 +15,8 @@ What IT'S NOT:
 
 ## TODO
 
-- [x] Collapse consequent whitespaces.
-- [ ] Skip line comments (starting with `#`).
+- [x] ~~Collapse consequent whitespaces.~~
+- [x] ~~Skip line comments (starting with `#`).~~
 - [ ] Clear shipped tokens from the input buffer.
 - [ ] Use hash-table to speed up token look-up.
 

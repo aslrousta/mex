@@ -1,4 +1,3 @@
-\def\author2{\1 \2}
-\def\knuth{\author{Donald E.}{Knuth}}
-
+\def\author2{\1 \2}#
+\def\knuth{\author{Donald E.}{Knuth}}#
 MeX is based on TeX originally created by \knuth.
