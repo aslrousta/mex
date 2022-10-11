@@ -1,0 +1,4 @@
+  Preceeding and  consecutive    whitespaces   shouldn't matter and single 
+line-breaks  translate into whitespaces.
+
+But  two and more line-breaks are interpreted as single one.

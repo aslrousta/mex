@@ -62,6 +62,8 @@ static struct {
 #define MACROMAX (UINT16_MAX - tSENTINEL)
 
 static FILE *in;
+static int is_start;
+static int line_breaks;
 
 static token_t buf[BUFFERMAX];
 static int bpos;
@@ -83,6 +85,8 @@ static void init(FILE *fp) {
   in = fp;
   pcur = tSENTINEL;
   bpos = blast = plast = mlast = 0;
+  is_start = 1;
+  line_breaks = 0;
   for (i = 0; i < 256; i++) {
     ppos[i] = plast;
     plen[i] = 1;
@@ -119,10 +123,30 @@ static void scan_cs(void) {
 }
 
 static void scan(void) {
-  int ch = fgetc(in);
-  if (ch == EOF)
+  int ch;
+again:
+  ch = fgetc(in);
+  if (ch == EOF) {
     buf[blast++] = tEOF;
-  else if (ch == '{')
+    return;
+  }
+  if (isspace(ch)) {
+    if (!is_start) {
+      do {
+        if (ch == '\n') line_breaks++;
+        ch = fgetc(in);
+        if (ch == EOF) {
+          buf[blast++] = tEOF;
+          return;
+        }
+      } while (isspace(ch));
+      ungetc(ch, in);
+      buf[blast++] = line_breaks > 1 ? '\n' : ' ';
+      line_breaks = 0;
+    }
+    goto again;
+  }
+  if (ch == '{')
     buf[blast++] = tBGROUP;
   else if (ch == '}')
     buf[blast++] = tEGROUP;
@@ -141,6 +165,7 @@ static void scan(void) {
       scan_cs();
     }
   }
+  is_start = 0;
 }
 
 static token_t scan_group(void) {
