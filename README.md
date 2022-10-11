@@ -17,8 +17,9 @@ What IT'S NOT:
 
 - [x] ~~Collapse consequent whitespaces.~~
 - [x] ~~Skip line comments (starting with `#`).~~
-- [ ] Clear shipped tokens from the input buffer.
+- [x] ~~Clear shipped tokens from the input buffer.~~
 - [ ] Use hash-table to speed up token look-up.
+- [ ] Handle errors and buffer overruns.
 
 ## License
 

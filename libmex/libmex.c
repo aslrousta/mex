@@ -270,8 +270,14 @@ static void expand(void) {
 }
 
 static token_t next(void) {
+  int i;
 again:
   if (bpos == blast) scan();
+  if (bpos > TOKENMAX) {
+    for (i = bpos; i < blast; i++) buf[i - bpos] = buf[i];
+    blast -= bpos;
+    bpos = 0;
+  }
   if (buf[bpos] == tDEF) {
     bpos++;
     define();
